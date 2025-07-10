@@ -115,6 +115,7 @@ public class CustomerController {
         return new ResponseEntity<>(customersPage, HttpStatus.OK);
     }
 
+
     @GetMapping("/slice")
     public ResponseEntity<Slice<Customer>> getCustomersSlice(
             @RequestParam(defaultValue = "0") int page,
