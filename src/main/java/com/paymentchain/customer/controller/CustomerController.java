@@ -3,6 +3,7 @@ package com.paymentchain.customer.controller;
 import com.paymentchain.customer.entity.Customer;
 import com.paymentchain.customer.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -96,6 +97,32 @@ public class CustomerController {
 
         customerRepository.save(customer);
         return new ResponseEntity<>(customer, HttpStatus.OK);
+    }
+
+
+    @GetMapping("/page")
+    public ResponseEntity<Page<Customer>> getCustomersPaged(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction) {
+
+        Sort sort = direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<Customer> customersPage = customerRepository.findAll(pageable);
+
+        return new ResponseEntity<>(customersPage, HttpStatus.OK);
+    }
+
+    @GetMapping("/slice")
+    public ResponseEntity<Slice<Customer>> getCustomersSlice(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Slice<Customer> customersSlice = customerRepository.findAll(pageable);
+        return new ResponseEntity<>(customersSlice, HttpStatus.OK);
     }
 
 }
