@@ -1,9 +1,5 @@
 package com.paymentchain.customer.entity;
 
-
-import jakarta.persistence.Entity;
-
-@Entity()
 public class Customer {
     private long id;
     private int yearsold;
